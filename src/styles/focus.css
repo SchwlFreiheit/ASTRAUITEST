@@ -1,0 +1,151 @@
+/* Focus / Pin / Spread / Collapse — semantic depth operations. */
+.detail-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background:
+    radial-gradient(ellipse at 50% 48%, rgba(114,225,244,.035), transparent 36%),
+    rgba(0,5,8,.68);
+  backdrop-filter: blur(2px) brightness(.72);
+  -webkit-backdrop-filter: blur(2px) brightness(.72);
+}
+
+.detail-backdrop::before {
+  content: "";
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(114,225,244,.18), rgba(196,140,255,.2), rgba(114,225,244,.18), transparent);
+  pointer-events: none;
+}
+
+.detail-backdrop.is-pinned::after {
+  content: "PINNED // PERSISTENT FOCUS";
+  position: absolute;
+  top: 22px;
+  right: 30px;
+  color: var(--amber);
+  font-family: var(--font-data);
+  font-size: 10px;
+  letter-spacing: .12em;
+}
+
+.detail-sheet {
+  position: relative;
+  width: min(820px, calc(100vw - 80px));
+  max-height: calc(100vh - 90px);
+  overflow: auto;
+  padding: 26px 30px 30px;
+  border: 0;
+  border-left: 1px solid rgba(114,225,244,.46);
+  border-top: 1px solid rgba(114,225,244,.16);
+  clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 26px 100%, 0 calc(100% - 26px));
+  background:
+    linear-gradient(128deg, rgba(10,31,40,.96), rgba(4,15,21,.93) 54%, rgba(7,17,24,.86)),
+    var(--surface-strong);
+  box-shadow:
+    -30px 32px 76px rgba(0,0,0,.55),
+    24px 18px 70px rgba(196,140,255,.035),
+    inset 18px 0 34px rgba(114,225,244,.025);
+  transition: width 200ms cubic-bezier(.2,.8,.2,1), transform 200ms cubic-bezier(.2,.8,.2,1);
+}
+
+.detail-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 16px -18px -18px 22px;
+  z-index: -1;
+  border-left: 1px solid rgba(196,140,255,.14);
+  border-bottom: 1px solid rgba(196,140,255,.08);
+  background: rgba(2,8,12,.28);
+  transform: translate3d(18px,16px,0);
+  pointer-events: none;
+}
+
+.detail-sheet.is-spread {
+  width: min(980px, calc(100vw - 80px));
+}
+.detail-sheet.is-compact {
+  width: min(690px, calc(100vw - 80px));
+}
+
+.detail-sheet > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(114,225,244,.13);
+}
+.detail-sheet h2 {
+  margin-top: 7px;
+  font-size: 36px;
+  font-weight: 440;
+}
+
+.detail-operations {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 9px;
+}
+.detail-op,
+.detail-sheet .close-button {
+  min-height: 48px;
+  min-width: 96px;
+  padding: 0 16px;
+  border: 1px solid rgba(114,225,244,.2);
+  color: var(--text-2);
+  background: linear-gradient(135deg, rgba(7,22,29,.84), rgba(3,12,17,.64));
+  font-family: var(--font-data);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
+}
+.detail-op.is-active {
+  color: var(--cyan);
+  border-color: rgba(114,225,244,.55);
+  background: linear-gradient(135deg, rgba(18,55,66,.46), rgba(4,17,22,.72));
+  box-shadow: 0 0 20px rgba(114,225,244,.05);
+}
+.detail-backdrop.is-pinned .detail-op:first-child {
+  color: var(--amber);
+  border-color: rgba(240,191,107,.5);
+  background: linear-gradient(135deg, rgba(65,47,18,.42), rgba(19,14,7,.72));
+}
+.detail-sheet .close-button {
+  color: #d7e2e5;
+}
+
+.detail-sheet__body {
+  padding-top: 22px;
+}
+.detail-sheet.is-spread .detail-rows {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  column-gap: 28px;
+  row-gap: 0;
+}
+.detail-sheet.is-spread .detail-rows > div {
+  min-height: 74px;
+}
+.detail-sheet.is-compact .detail-rows > div {
+  grid-template-columns: 150px 1fr;
+}
+
+@media (max-width: 760px) {
+  .detail-backdrop { padding: 16px; }
+  .detail-sheet,
+  .detail-sheet.is-spread,
+  .detail-sheet.is-compact { width: calc(100vw - 32px); padding: 20px; }
+  .detail-sheet > header { flex-direction: column; }
+  .detail-operations { justify-content: flex-start; }
+  .detail-sheet.is-spread .detail-rows { grid-template-columns: 1fr; }
+}
