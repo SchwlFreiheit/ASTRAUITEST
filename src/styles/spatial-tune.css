@@ -1,0 +1,164 @@
+/* v2 tuning after screenshot review: keep every datum readable while increasing semantic depth. */
+
+.view--main::after {
+  left: 4%;
+  right: 5%;
+  top: 48.7%;
+  height: 14px;
+  background:
+    radial-gradient(circle at 18% 50%, rgba(105,230,173,.9) 0 2px, rgba(105,230,173,.22) 3px, transparent 4px),
+    radial-gradient(circle at 50% 50%, rgba(114,225,244,.95) 0 3px, rgba(114,225,244,.22) 4px, transparent 5px),
+    radial-gradient(circle at 76% 50%, rgba(240,191,107,.88) 0 2px, rgba(240,191,107,.2) 3px, transparent 4px),
+    linear-gradient(180deg, transparent 6px, rgba(105,230,173,.18) 6px, rgba(114,225,244,.48) 7px, rgba(196,140,255,.28) 8px, transparent 8px);
+  box-shadow: none;
+}
+
+.view--main .directive-cluster {
+  width: 48%;
+}
+
+.view--main .frame-cluster {
+  left: 5.2%;
+  top: 54.2%;
+  width: 40.5%;
+}
+
+.view--main .main-presence-stack {
+  left: 43.5%;
+  width: 35.5%;
+}
+
+.view--main .quick-jump-stack {
+  right: -1.3%;
+  width: 25.4%;
+  gap: 14px;
+}
+
+.view--main .quick-jump {
+  min-height: 112px;
+  grid-template-columns: minmax(0,1fr) 76px;
+  transform: translateX(18px);
+  clip-path: polygon(0 0, 100% 0, 96% 100%, 0 100%);
+}
+.view--main .quick-jump:nth-child(2) { margin-left: 10px; transform: translateX(23px); }
+.view--main .quick-jump:nth-child(3) { margin-left: 3px; transform: translateX(17px); }
+.view--main .quick-jump:nth-child(4) { margin-left: 14px; transform: translateX(25px); }
+.view--main .quick-jump__visual { overflow: hidden; }
+.view--main .quick-jump__copy > strong { font-size: 17px; }
+.view--main .quick-jump__copy > small { font-size: 10.5px; }
+
+.view--main .next-directive-surface {
+  left: 12%;
+  right: 7%;
+  top: 60%;
+  z-index: 5;
+}
+
+.view--main .auto-info {
+  left: 12%;
+  right: 7%;
+}
+
+/* Light and shadow are tied to system ownership instead of generic glow. */
+.view--main .directive-cluster::before,
+.view--main .frame-cluster::before {
+  content: "";
+  position: absolute;
+  left: 18px;
+  right: -12px;
+  top: 15px;
+  bottom: 8px;
+  z-index: -2;
+  pointer-events: none;
+  background: linear-gradient(125deg, rgba(114,225,244,.055), rgba(114,225,244,.012) 46%, transparent 72%);
+  filter: blur(14px);
+  transform: translate3d(16px,13px,0);
+}
+
+.view--main .directive-cluster::after,
+.view--main .frame-cluster::after {
+  content: "";
+  position: absolute;
+  right: -7.5%;
+  top: 43%;
+  width: 9%;
+  height: 1px;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(114,225,244,.46), rgba(196,140,255,.16), transparent);
+  box-shadow: 0 0 12px rgba(114,225,244,.08);
+}
+
+.view--main .frame-cluster::after {
+  top: 34%;
+  right: -13%;
+  width: 15%;
+  background: linear-gradient(90deg, rgba(114,225,244,.5), rgba(196,140,255,.2), transparent);
+}
+
+.view--main .mira-presence {
+  filter: drop-shadow(0 22px 42px rgba(0,0,0,.18));
+}
+
+.view--main .mira-presence .corner {
+  width: 58px;
+  height: 58px;
+  border-color: rgba(196,140,255,.44);
+  filter: drop-shadow(0 0 8px rgba(196,140,255,.08));
+}
+
+.view--main .mira-presence__content small {
+  font-size: 9px;
+  letter-spacing: .06em;
+}
+
+/* Focus is an information-depth operation: nearby data rises, context recedes. */
+.view--main:has(.directive-cluster:hover) .directive-cluster,
+.view--main:has(.directive-cluster:focus-within) .directive-cluster {
+  z-index: 14;
+  transform: translate3d(0,-2px,0) scale(1.008);
+}
+.view--main:has(.directive-cluster:hover) .frame-cluster,
+.view--main:has(.directive-cluster:hover) .quick-jump-stack,
+.view--main:has(.directive-cluster:focus-within) .frame-cluster,
+.view--main:has(.directive-cluster:focus-within) .quick-jump-stack {
+  opacity: .62;
+  filter: saturate(.76) brightness(.86);
+}
+
+.view--main:has(.frame-cluster:hover) .frame-cluster,
+.view--main:has(.frame-cluster:focus-within) .frame-cluster {
+  z-index: 15;
+  transform: translate3d(0,-3px,0) scale(1.008);
+}
+.view--main:has(.frame-cluster:hover) .directive-cluster,
+.view--main:has(.frame-cluster:hover) .quick-jump-stack,
+.view--main:has(.frame-cluster:focus-within) .directive-cluster,
+.view--main:has(.frame-cluster:focus-within) .quick-jump-stack {
+  opacity: .62;
+  filter: saturate(.76) brightness(.86);
+}
+
+.view--main .directive-cluster,
+.view--main .frame-cluster,
+.view--main .main-presence-stack,
+.view--main .quick-jump-stack {
+  transition: opacity 180ms ease, filter 180ms ease, transform 180ms cubic-bezier(.2,.8,.2,1);
+}
+
+/* Avoid microscopic telemetry labels at the common 1360px preview size. */
+.view--main .directive-telemetry .phase-step__index { font-size: 8.5px; }
+.view--main .directive-telemetry .phase-step strong { font-size: 9.5px; }
+.view--main .telemetry-unit .section-label { font-size: 9.5px; }
+.view--main .auto-info span,
+.view--main .auto-info small { font-size: 8.5px; }
+
+@media (max-width: 1180px) {
+  .view--main .frame-cluster,
+  .view--main .main-presence-stack,
+  .view--main .quick-jump-stack,
+  .view--main .next-directive-surface,
+  .view--main .auto-info { width: auto; }
+  .view--main .directive-cluster::after,
+  .view--main .frame-cluster::after { display: none; }
+}
