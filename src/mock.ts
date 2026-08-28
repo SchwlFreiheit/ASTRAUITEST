@@ -13,14 +13,8 @@ export const mock = {
     app: 'VS Code',
     focus: 'HIGH',
     confidence: 94,
-    provenance: 'OBSERVED',
+    provenance: 'SENTRY',
   },
-  route: [
-    { time: '21:00', title: 'Open Phase', state: 'done' },
-    { time: '23:00', title: 'Python Study', state: 'now' },
-    { time: '00:30', title: 'Open Window', state: 'next' },
-    { time: '01:00', title: 'Recovery Sequence', state: 'later' },
-  ],
   sentry: {
     activeUnits: 3,
     summary: 'Room · Network · Environment',
@@ -33,4 +27,10 @@ export const mock = {
     running: 0,
     ready: 2,
   },
+  route: [
+    { time: '22:10', title: 'Python Study', state: 'now' },
+    { time: '23:40', title: 'Open Window', state: 'next' },
+    { time: '00:30', title: 'Recovery', state: 'later' },
+    { time: '07:00', title: 'Reactivation', state: 'later' },
+  ],
 } as const
