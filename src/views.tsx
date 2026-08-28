@@ -9,20 +9,22 @@ export function MainView({ onView }: { onView: (view: ViewId) => void }) {
     <div className={`view view--main${focus ? ` is-focus-${focus}` : ''}`}>
       <div className="main-primary-stack">
         <Surface className={`directive-surface spatial-surface${focus === 'directive' ? ' is-focused' : ''}`}>
-          <div className="cluster-heading">
-            <SectionLabel>PRIMARY DIRECTIVE</SectionLabel>
-            <span className="cluster-state">ACTIVE // PRIORITY 01</span>
+          <div className="cluster-title-layer">
+            <div className="cluster-heading">
+              <SectionLabel>PRIMARY DIRECTIVE</SectionLabel>
+              <span className="cluster-state">ACTIVE // PRIORITY 01</span>
+            </div>
+            <h1>{mock.directive.title}</h1>
+            <p className="lead-copy">{mock.directive.objective}</p>
           </div>
-          <h1>{mock.directive.title}</h1>
-          <p className="lead-copy">{mock.directive.objective}</p>
 
-          <div className="metric-row">
+          <div className="metric-row spatial-data-layer">
             <Metric label="START" value={mock.directive.start} />
             <Metric label="DURATION" value={mock.directive.duration} />
             <Metric label="STATUS" value={mock.directive.status} accent />
           </div>
 
-          <div className="action-row">
+          <div className="action-row spatial-control-layer">
             <ActionButton tone="success">START</ActionButton>
             <ActionButton>TALK</ActionButton>
             <ActionButton>DONE</ActionButton>
@@ -42,21 +44,23 @@ export function MainView({ onView }: { onView: (view: ViewId) => void }) {
         </Surface>
 
         <Surface className={`frame-surface spatial-surface${focus === 'frame' ? ' is-focused' : ''}`}>
-          <div className="frame-heading">
-            <div>
-              <SectionLabel>CURRENT FRAME</SectionLabel>
-              <h2>{mock.frame.title}</h2>
+          <div className="cluster-title-layer cluster-title-layer--frame">
+            <div className="frame-heading">
+              <div>
+                <SectionLabel>CURRENT FRAME</SectionLabel>
+                <h2>{mock.frame.title}</h2>
+              </div>
+              <div className="confidence-badge"><strong>{mock.frame.confidence}%</strong><span>CONF.</span></div>
             </div>
-            <div className="confidence-badge"><strong>{mock.frame.confidence}%</strong><span>CONF.</span></div>
           </div>
 
-          <div className="metric-row metric-row--compact">
+          <div className="metric-row metric-row--compact spatial-data-layer">
             <Metric label="ELAPSED" value={mock.frame.elapsed} />
             <Metric label="APP" value={mock.frame.app} />
             <Metric label="FOCUS" value={mock.frame.focus} accent />
           </div>
 
-          <div className="action-row">
+          <div className="action-row spatial-control-layer">
             <ActionButton tone="primary" pressed={focus === 'frame'} onClick={() => setFocus(focus === 'frame' ? null : 'frame')}>
               {focus === 'frame' ? 'COLLAPSE' : 'EXPAND'}
             </ActionButton>
