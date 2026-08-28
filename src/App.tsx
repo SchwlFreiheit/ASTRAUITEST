@@ -64,7 +64,6 @@ export default function App() {
         </main>
       </div>
       <BottomDock onOpenPhase={() => selectScene('open')} />
-      <button className="scene-peek" onClick={() => selectScene('recovery')}>RECOVERY</button>
     </div>
   )
 }
