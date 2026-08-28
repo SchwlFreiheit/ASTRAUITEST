@@ -95,6 +95,7 @@ export function MainSpatialV2({ onView }: { onView: (view: ViewId) => void }) {
       </div>
 
       <button className="holo-layer holo-directive" onClick={() => toggle('directive')} aria-pressed={focus === 'directive'}>
+        <span className="holo-layer__origin-echo" aria-hidden="true" />
         <span className="holo-layer__depth">INTENT // FOREGROUND</span>
         <div className="holo-layer__head"><span>PRIMARY DIRECTIVE</span><strong>PRIORITY 01</strong></div>
         <h1>{mock.directive.title}</h1>
@@ -113,6 +114,7 @@ export function MainSpatialV2({ onView }: { onView: (view: ViewId) => void }) {
       </button>
 
       <button className="holo-layer holo-frame" onClick={() => toggle('frame')} aria-pressed={focus === 'frame'}>
+        <span className="holo-layer__origin-echo" aria-hidden="true" />
         <span className="holo-layer__depth">REALITY // OBSERVED</span>
         <div className="holo-layer__head"><span>CURRENT FRAME</span><strong>{mock.frame.confidence}% CONF.</strong></div>
         <h2>{mock.frame.title}</h2>
@@ -135,6 +137,7 @@ export function MainSpatialV2({ onView }: { onView: (view: ViewId) => void }) {
       <AmbientTicker item={ambientItems[ambientIndex]} />
 
       <button className="holo-route-portal" onClick={() => toggle('route')} aria-pressed={focus === 'route'}>
+        <span className="holo-layer__origin-echo" aria-hidden="true" />
         <span>NEXT DIRECTIVE</span><strong>{mock.directive.next}</strong>
         <div className="route-mini">{mock.route.map((item,index)=><i key={item.time} className={index===0?'is-now':index===1?'is-next':''}><b>{item.time}</b><small>{item.title}</small></i>)}</div>
         <div className="route-portal-expanded"><p>NOWを基準に、後続は距離として保持。</p><button type="button" onClick={(event)=>{event.stopPropagation();onView('route')}}>OPEN ROUTE</button></div>
@@ -148,6 +151,9 @@ export function MainSpatialV2({ onView }: { onView: (view: ViewId) => void }) {
 
       {focus === 'sentry' && <section className="focus-deployment focus-deployment--cyan"><header><span>SENTRY / FOCUSED</span><button onClick={() => setSpatialFocus(null)}>COLLAPSE</button></header><strong>3 OBSERVATION CHANNELS</strong><div className="deployment-lanes"><i><b style={{width:'62%'}}/></i><i><b style={{width:'96%'}}/></i><i><b style={{width:'88%'}}/></i></div><button onClick={() => onView('observe')}>OPEN OBSERVE</button></section>}
       {focus === 'laplace' && <section className="focus-deployment focus-deployment--violet"><header><span>LAPLACE / MACHINE ANALYSIS</span><button onClick={() => setSpatialFocus(null)}>COLLAPSE</button></header><strong>STANDBY</strong><div className="deployment-signal">{[18,35,70,42,86,54,31,74,45,62,26].map((v,i)=><i key={i} style={{height:`${v}%`}} />)}</div><button onClick={() => onView('system')}>OPEN SYSTEM</button></section>}
+
+      {focus && spread && <SpatialRelationField focus={focus} />}
+      {focus && <DepthRail pinned={pinned} spread={spread} />}
 
       {focus && (
         <nav className="spatial-toolbar" aria-label="Spatial information controls">
@@ -165,11 +171,7 @@ export function MainSpatialV2({ onView }: { onView: (view: ViewId) => void }) {
 function AmbientTicker({ item }: { item: AmbientItem }) {
   return (
     <section className={`ambient-ticker ambient-ticker--${item.visual}`} aria-label="Auto information panel">
-      <div key={`${item.label}-${item.value}`} className="ambient-ticker__content">
-        <span>{item.label}</span>
-        <strong>{item.value}</strong>
-        <small>{item.meta}</small>
-      </div>
+      <div key={`${item.label}-${item.value}`} className="ambient-ticker__content"><span>{item.label}</span><strong>{item.value}</strong><small>{item.meta}</small></div>
       <div key={`${item.visual}-${item.value}`} className="ambient-ticker__visual" aria-hidden="true">
         {item.visual === 'weather' && <><i className="weather-core"/><i className="weather-ray weather-ray--a"/><i className="weather-ray weather-ray--b"/><i className="weather-ray weather-ray--c"/></>}
         {item.visual === 'gpu' && <><i style={{height:'24%'}}/><i style={{height:'42%'}}/><i style={{height:'68%'}}/><i style={{height:'32%'}}/><i style={{height:'56%'}}/></>}
@@ -177,5 +179,36 @@ function AmbientTicker({ item }: { item: AmbientItem }) {
         {item.visual === 'uptime' && <><i style={{height:'18%'}}/><i style={{height:'38%'}}/><i style={{height:'62%'}}/><i style={{height:'82%'}}/><i style={{height:'100%'}}/></>}
       </div>
     </section>
+  )
+}
+
+function DepthRail({ pinned, spread }: { pinned: boolean; spread: boolean }) {
+  return (
+    <aside className="depth-rail" aria-label="Workspace depth state">
+      <span>DEPTH</span>
+      <div className="depth-rail__track"><i className="depth-dot depth-dot--far"/><i className="depth-dot depth-dot--base"/><i className="depth-dot depth-dot--near is-active"/></div>
+      <div className="depth-rail__labels"><small>FAR</small><small>BASE</small><small>NEAR</small></div>
+      <strong>{pinned ? 'LOCKED' : spread ? 'SPREAD' : 'FOCUS'}</strong>
+    </aside>
+  )
+}
+
+function SpatialRelationField({ focus }: { focus: Exclude<FocusId, null> }) {
+  const labels = focus === 'directive'
+    ? ['EXECUTION', 'TRAJECTORY', 'CONTEXT']
+    : focus === 'frame'
+      ? ['EVIDENCE', 'DIRECTIVE', 'CONTEXT']
+      : focus === 'route'
+        ? ['CURRENT', 'OBJECTIVE', 'CONTEXT']
+        : focus === 'sentry'
+          ? ['OBSERVE', 'FRAME', 'CONTEXT']
+          : ['ANALYSIS', 'SYSTEM', 'CONTEXT']
+
+  return (
+    <div className={`relation-field relation-field--${focus}`} aria-label="Related information links">
+      <div className="relation-link relation-link--a"><i/><b/><span>{labels[0]}</span></div>
+      <div className="relation-link relation-link--b"><i/><b/><span>{labels[1]}</span></div>
+      <div className="relation-link relation-link--c"><i/><b/><span>{labels[2]}</span></div>
+    </div>
   )
 }
