@@ -10,19 +10,58 @@ function initialFocus(): FocusId {
 }
 
 export function MainSpatialV2({ onView }: { onView: (view: ViewId) => void }) {
+  const params = new URLSearchParams(window.location.search)
   const [focus, setFocus] = useState<FocusId>(initialFocus)
+  const [pinned, setPinned] = useState(params.get('pin') === '1')
+  const [spread, setSpread] = useState(params.get('spread') === '1')
+
+  const syncUrl = (nextFocus: FocusId, nextPinned = pinned, nextSpread = spread) => {
+    const url = new URL(window.location.href)
+    if (nextFocus) url.searchParams.set('focus', nextFocus)
+    else url.searchParams.delete('focus')
+    if (nextPinned && nextFocus) url.searchParams.set('pin', '1')
+    else url.searchParams.delete('pin')
+    if (nextSpread && nextFocus) url.searchParams.set('spread', '1')
+    else url.searchParams.delete('spread')
+    window.history.replaceState(null, '', url)
+  }
 
   const setSpatialFocus = (next: FocusId) => {
     setFocus(next)
-    const url = new URL(window.location.href)
-    if (next) url.searchParams.set('focus', next)
-    else url.searchParams.delete('focus')
-    window.history.replaceState(null, '', url)
+    if (!next) {
+      setPinned(false)
+      setSpread(false)
+      syncUrl(null, false, false)
+      return
+    }
+    syncUrl(next)
   }
-  const toggle = (next: Exclude<FocusId, null>) => setSpatialFocus(focus === next ? null : next)
+
+  const toggle = (next: Exclude<FocusId, null>) => {
+    if (pinned && focus && focus !== next) return
+    if (focus === next) {
+      if (pinned) return
+      setSpatialFocus(null)
+      return
+    }
+    setSpread(false)
+    setSpatialFocus(next)
+  }
+
+  const togglePin = () => {
+    const next = !pinned
+    setPinned(next)
+    syncUrl(focus, next, spread)
+  }
+
+  const toggleSpread = () => {
+    const next = !spread
+    setSpread(next)
+    syncUrl(focus, pinned, next)
+  }
 
   return (
-    <div className="holo-main" data-focus={focus ?? 'none'}>
+    <div className="holo-main" data-focus={focus ?? 'none'} data-pin={pinned ? 'true' : 'false'} data-spread={spread ? 'true' : 'false'}>
       <div className="holo-ambient holo-ambient--cyan" aria-hidden="true" />
       <div className="holo-ambient holo-ambient--violet" aria-hidden="true" />
 
@@ -88,7 +127,15 @@ export function MainSpatialV2({ onView }: { onView: (view: ViewId) => void }) {
       {focus === 'sentry' && <section className="focus-deployment focus-deployment--cyan"><header><span>SENTRY / FOCUSED</span><button onClick={() => setSpatialFocus(null)}>COLLAPSE</button></header><strong>3 OBSERVATION CHANNELS</strong><div className="deployment-lanes"><i><b style={{width:'62%'}}/></i><i><b style={{width:'96%'}}/></i><i><b style={{width:'88%'}}/></i></div><button onClick={() => onView('observe')}>OPEN OBSERVE</button></section>}
       {focus === 'laplace' && <section className="focus-deployment focus-deployment--violet"><header><span>LAPLACE / MACHINE ANALYSIS</span><button onClick={() => setSpatialFocus(null)}>COLLAPSE</button></header><strong>STANDBY</strong><div className="deployment-signal">{[18,35,70,42,86,54,31,74,45,62,26].map((v,i)=><i key={i} style={{height:`${v}%`}} />)}</div><button onClick={() => onView('system')}>OPEN SYSTEM</button></section>}
 
-      <div className="holo-instruction" aria-live="polite">{focus === null ? 'SELECT INFORMATION // ELEMENT MOVES TO FOREGROUND' : 'FOCUS DEPLOYED // SELECT AGAIN TO COLLAPSE'}</div>
+      {focus && (
+        <nav className="spatial-toolbar" aria-label="Spatial information controls">
+          <button className={pinned ? 'is-active' : ''} onClick={togglePin}><span>PIN</span><small>{pinned ? 'LOCKED' : 'LOCK DEPTH'}</small></button>
+          <button className={spread ? 'is-active' : ''} onClick={toggleSpread}><span>{spread ? 'COLLECT' : 'SPREAD'}</span><small>{spread ? 'RELATED IN' : 'RELATED OUT'}</small></button>
+          <button onClick={() => setSpatialFocus(null)}><span>COLLAPSE</span><small>RETURN</small></button>
+        </nav>
+      )}
+
+      <div className="holo-instruction" aria-live="polite">{focus === null ? 'SELECT INFORMATION // ELEMENT MOVES TO FOREGROUND' : pinned ? 'FOCUS PINNED // SPREAD RELATED INFORMATION OR COLLAPSE' : spread ? 'RELATED INFORMATION SPREAD ACROSS DEPTH' : 'FOCUS DEPLOYED // PIN, SPREAD, OR COLLAPSE'}</div>
     </div>
   )
 }
