@@ -12,6 +12,7 @@ import './styles/spatial-polish.css'
 import './styles/focus.css'
 import './styles/secondary-spatial.css'
 import './styles/main-spatial-v2.css'
+import './styles/spatial-controls.css'
 import './styles/scenes.css'
 import './styles/shell-holo.css'
 
