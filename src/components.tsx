@@ -176,15 +176,30 @@ export function BottomDock({ onOpenPhase }: { onOpenPhase: () => void }) {
 }
 
 export function DetailSheet({ title, children, onClose }: { title: string; children: ReactNode; onClose: () => void }) {
+  const [pinned, setPinned] = useState(false)
+  const [spread, setSpread] = useState(true)
+
   return (
-    <div className="detail-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-      <aside className="detail-sheet" role="dialog" aria-modal="true" aria-label={title}>
+    <div
+      className={`detail-backdrop${pinned ? ' is-pinned' : ''}`}
+      role="presentation"
+      onMouseDown={(event) => !pinned && event.target === event.currentTarget && onClose()}
+    >
+      <aside className={`detail-sheet${spread ? ' is-spread' : ' is-compact'}`} role="dialog" aria-modal="true" aria-label={title}>
         <header>
           <div>
             <span className="section-label">FOCUSED INFORMATION</span>
             <h2>{title}</h2>
           </div>
-          <button className="close-button" onClick={onClose}>CLOSE</button>
+          <div className="detail-operations" aria-label="Spatial information operations">
+            <button className={`detail-op${pinned ? ' is-active' : ''}`} onClick={() => setPinned((value) => !value)}>
+              {pinned ? 'UNPIN' : 'PIN'}
+            </button>
+            <button className={`detail-op${spread ? ' is-active' : ''}`} onClick={() => setSpread((value) => !value)}>
+              {spread ? 'COMPACT' : 'SPREAD'}
+            </button>
+            <button className="close-button" onClick={onClose}>COLLAPSE</button>
+          </div>
         </header>
         <div className="detail-sheet__body">{children}</div>
       </aside>
