@@ -17,13 +17,13 @@
   --amber: #f0bf6b;
   --amber-soft: rgba(240, 191, 107, 0.12);
   --red: #ff6b76;
-  --text: #e8f1f4;
-  --text-2: #b7c9d0;
-  --text-3: #718b95;
+  --text: #edf3f5;
+  --text-2: #bac8cd;
+  --text-3: #718992;
   --shadow: rgba(0, 0, 0, 0.52);
-  --radius: 3px;
-  --control-h: 48px;
-  --font-ui: "Segoe UI Variable Text", "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
-  --font-display: "Segoe UI Variable Display", "Segoe UI", "Yu Gothic UI", sans-serif;
+  --radius: 2px;
+  --control-h: 50px;
+  --font-ui: "Aptos", "Segoe UI Variable Text", "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
+  --font-display: "Aptos Display", "Segoe UI Variable Display", "Segoe UI", "Yu Gothic UI", sans-serif;
   --font-data: "Cascadia Code", "Consolas", monospace;
 }

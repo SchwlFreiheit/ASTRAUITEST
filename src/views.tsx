@@ -1,31 +1,47 @@
 import { useState } from 'react'
-import { ActionButton, DetailSheet, MiraPresence, QuickJump, SectionLabel, Surface, type ViewId } from './components'
+import { ActionButton, MiraPresence, QuickJump, SectionLabel, Surface, type ViewId } from './components'
 import { mock } from './mock'
 
 export function MainView({ onView }: { onView: (view: ViewId) => void }) {
-  const [detail, setDetail] = useState<'directive' | 'frame' | null>(null)
+  const [focus, setFocus] = useState<'directive' | 'frame' | null>(null)
 
   return (
-    <div className="view view--main">
+    <div className={`view view--main${focus ? ` is-focus-${focus}` : ''}`}>
       <div className="main-primary-stack">
-        <Surface className="directive-surface">
-          <SectionLabel>PRIMARY DIRECTIVE</SectionLabel>
+        <Surface className={`directive-surface spatial-surface${focus === 'directive' ? ' is-focused' : ''}`}>
+          <div className="cluster-heading">
+            <SectionLabel>PRIMARY DIRECTIVE</SectionLabel>
+            <span className="cluster-state">ACTIVE // PRIORITY 01</span>
+          </div>
           <h1>{mock.directive.title}</h1>
           <p className="lead-copy">{mock.directive.objective}</p>
+
           <div className="metric-row">
             <Metric label="START" value={mock.directive.start} />
             <Metric label="DURATION" value={mock.directive.duration} />
             <Metric label="STATUS" value={mock.directive.status} accent />
           </div>
+
           <div className="action-row">
             <ActionButton tone="success">START</ActionButton>
             <ActionButton>TALK</ActionButton>
             <ActionButton>DONE</ActionButton>
-            <ActionButton onClick={() => setDetail('directive')}>DETAIL</ActionButton>
+            <ActionButton tone="primary" pressed={focus === 'directive'} onClick={() => setFocus(focus === 'directive' ? null : 'directive')}>
+              {focus === 'directive' ? 'COLLAPSE' : 'EXPAND'}
+            </ActionButton>
           </div>
+
+          {focus === 'directive' && (
+            <div className="focus-extension focus-extension--directive">
+              <FocusDatum label="NEXT DIRECTIVE" value={mock.directive.next} />
+              <FocusDatum label="EST. COMPLETE" value="00:30" />
+              <FocusDatum label="CLEARANCE" value="OPEN PHASE AVAILABLE" tone="amber" />
+              <ActionButton onClick={() => onView('route')}>OPEN ROUTE</ActionButton>
+            </div>
+          )}
         </Surface>
 
-        <Surface className="frame-surface">
+        <Surface className={`frame-surface spatial-surface${focus === 'frame' ? ' is-focused' : ''}`}>
           <div className="frame-heading">
             <div>
               <SectionLabel>CURRENT FRAME</SectionLabel>
@@ -33,26 +49,40 @@ export function MainView({ onView }: { onView: (view: ViewId) => void }) {
             </div>
             <div className="confidence-badge"><strong>{mock.frame.confidence}%</strong><span>CONF.</span></div>
           </div>
+
           <div className="metric-row metric-row--compact">
             <Metric label="ELAPSED" value={mock.frame.elapsed} />
             <Metric label="APP" value={mock.frame.app} />
             <Metric label="FOCUS" value={mock.frame.focus} accent />
           </div>
+
           <div className="action-row">
-            <ActionButton onClick={() => setDetail('frame')}>DETAIL</ActionButton>
+            <ActionButton tone="primary" pressed={focus === 'frame'} onClick={() => setFocus(focus === 'frame' ? null : 'frame')}>
+              {focus === 'frame' ? 'COLLAPSE' : 'EXPAND'}
+            </ActionButton>
             <ActionButton>CORRECT</ActionButton>
+            <ActionButton onClick={() => onView('observe')}>OPEN OBSERVE</ActionButton>
           </div>
+
+          {focus === 'frame' && (
+            <div className="focus-extension focus-extension--frame">
+              <FocusDatum label="PROVENANCE" value={mock.frame.provenance} />
+              <FocusDatum label="CLASSIFICATION" value="STUDY" />
+              <FocusDatum label="CONFIDENCE" value={`${mock.frame.confidence}%`} tone="cyan" />
+              <ActionButton onClick={() => onView('observe')}>OBSERVATION DETAIL</ActionButton>
+            </div>
+          )}
         </Surface>
       </div>
 
       <div className="main-presence-stack">
         <MiraPresence />
-        <Surface className="next-directive-surface">
-          <SectionLabel>NEXT DIRECTIVE</SectionLabel>
+        <button className="next-directive-blade" onClick={() => onView('route')}>
+          <span>NEXT DIRECTIVE</span>
           <strong>{mock.directive.next}</strong>
-          <span>Route continuity remains flexible</span>
-          <ActionButton onClick={() => onView('route')}>OPEN ROUTE</ActionButton>
-        </Surface>
+          <small>Route continuity remains flexible</small>
+          <b>OPEN ROUTE</b>
+        </button>
       </div>
 
       <aside className="quick-jump-stack" aria-label="Context shortcuts">
@@ -61,30 +91,6 @@ export function MainView({ onView }: { onView: (view: ViewId) => void }) {
         <QuickJump label="LAPLACE" value={mock.laplace.state} meta={mock.laplace.note} tone="violet" onClick={() => onView('system')} />
         <QuickJump label="SUB INTELLIGENCE" value={`${mock.subIntelligence.running} Running · ${mock.subIntelligence.ready} Ready`} meta="Background queue" tone="green" onClick={() => onView('system')} />
       </aside>
-
-      {detail === 'directive' && (
-        <DetailSheet title="PRIMARY DIRECTIVE" onClose={() => setDetail(null)}>
-          <DetailRows rows={[
-            ['Current objective', mock.directive.objective],
-            ['Recommended start', mock.directive.start],
-            ['Target duration', mock.directive.duration],
-            ['Current status', mock.directive.status],
-            ['Next directive', mock.directive.next],
-          ]} />
-        </DetailSheet>
-      )}
-      {detail === 'frame' && (
-        <DetailSheet title="CURRENT FRAME" onClose={() => setDetail(null)}>
-          <DetailRows rows={[
-            ['Activity', mock.frame.title],
-            ['Elapsed', mock.frame.elapsed],
-            ['Application', mock.frame.app],
-            ['Focus', mock.frame.focus],
-            ['Confidence', `${mock.frame.confidence}%`],
-            ['Provenance', mock.frame.provenance],
-          ]} />
-        </DetailSheet>
-      )}
     </div>
   )
 }
@@ -202,10 +208,10 @@ function Metric({ label, value, accent }: { label: string; value: string; accent
   return <div className="metric"><span>{label}</span><strong className={accent ? 'text-ok' : ''}>{value}</strong></div>
 }
 
-function StatusTile({ title, value }: { title: string; value: string }) {
-  return <div className="status-tile"><span>{title}</span><strong>{value}</strong></div>
+function FocusDatum({ label, value, tone = 'default' }: { label: string; value: string; tone?: 'default' | 'amber' | 'cyan' }) {
+  return <div className={`focus-datum focus-datum--${tone}`}><span>{label}</span><strong>{value}</strong></div>
 }
 
-function DetailRows({ rows }: { rows: Array<[string, string]> }) {
-  return <div className="detail-rows">{rows.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}</div>
+function StatusTile({ title, value }: { title: string; value: string }) {
+  return <div className="status-tile"><span>{title}</span><strong>{value}</strong></div>
 }

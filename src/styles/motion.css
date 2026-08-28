@@ -8,14 +8,35 @@
   50% { opacity: 1; }
 }
 
+@keyframes deploy-layer {
+  from { opacity: 0; transform: translateY(-10px) scaleY(.92); }
+  to { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+
+@keyframes menu-deploy {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes listen-pulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(196,140,255,.04), 0 0 18px rgba(196,140,255,.08); }
+  50% { box-shadow: 0 0 0 8px rgba(196,140,255,.025), 0 0 30px rgba(196,140,255,.16); }
+}
+
 .view { animation: view-enter 220ms ease-out both; }
 .text-ok { animation: status-breathe 2.8s ease-in-out infinite; }
+.focus-extension { transform-origin: top center; animation: deploy-layer 220ms cubic-bezier(.2,.8,.2,1) both; }
+.mode-menu { animation: menu-deploy 160ms ease-out both; }
+.ptt-button.is-listening { animation: listen-pulse 1.15s ease-in-out infinite; }
 
 .nav-tile,
 .action-button,
 .quick-jump,
-.mode-button,
+.mode-selector,
+.mode-menu__item,
+.open-phase-button,
 .ptt-button,
+.next-directive-blade,
 .surface {
   transition:
     transform 160ms ease,
@@ -27,21 +48,34 @@
 
 .nav-tile:hover,
 .action-button:hover,
-.quick-jump:hover,
-.mode-button:hover,
-.ptt-button:hover {
+.mode-selector:hover,
+.mode-menu__item:hover,
+.open-phase-button:hover,
+.ptt-button:hover,
+.next-directive-blade:hover {
   border-color: var(--line-strong);
   background-color: rgba(12, 30, 38, .9);
 }
 
+.quick-jump:hover {
+  transform: translateX(-4px) translateZ(34px) !important;
+  opacity: 1 !important;
+  border-color: var(--line-strong);
+  background-color: rgba(12,30,38,.92);
+  box-shadow: 0 22px 38px rgba(0,0,0,.4);
+}
+
 .action-button:hover,
-.quick-jump:hover,
-.nav-tile:hover { transform: translateY(-2px); }
+.nav-tile:hover,
+.next-directive-blade:hover { transform: translateY(-2px); }
 .action-button:active,
 .quick-jump:active,
 .nav-tile:active,
-.mode-button:active,
-.ptt-button:active { transform: translateY(1px); }
+.mode-selector:active,
+.mode-menu__item:active,
+.open-phase-button:active,
+.ptt-button:active,
+.next-directive-blade:active { transform: translateY(1px); }
 
 .detail-backdrop { animation: backdrop-in 160ms ease-out both; }
 .detail-sheet { animation: sheet-in 220ms cubic-bezier(.2,.8,.2,1) both; }

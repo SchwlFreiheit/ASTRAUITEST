@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 
 export type ViewId = 'main' | 'route' | 'observe' | 'system'
 
@@ -47,8 +47,8 @@ export function NavRail({ view, onView }: { view: ViewId; onView: (view: ViewId)
   )
 }
 
-export function ActionButton({ children, tone = 'default', onClick }: { children: ReactNode; tone?: 'default' | 'primary' | 'success' | 'warning'; onClick?: () => void }) {
-  return <button className={`action-button action-button--${tone}`} onClick={onClick}>{children}</button>
+export function ActionButton({ children, tone = 'default', onClick, pressed }: { children: ReactNode; tone?: 'default' | 'primary' | 'success' | 'warning'; onClick?: () => void; pressed?: boolean }) {
+  return <button className={`action-button action-button--${tone}${pressed ? ' is-pressed' : ''}`} aria-pressed={pressed} onClick={onClick}>{children}</button>
 }
 
 export function Surface({ children, className = '', interactive = false, onClick }: { children: ReactNode; className?: string; interactive?: boolean; onClick?: () => void }) {
@@ -70,6 +70,12 @@ export function MiraPresence() {
       <span className="corner corner--tr" />
       <span className="corner corner--bl" />
       <span className="corner corner--br" />
+
+      <PresenceState className="presence-state--voice" label="VOICE" value="READY" />
+      <PresenceState className="presence-state--context" label="CONTEXT" value="SYNCED" />
+      <PresenceState className="presence-state--route" label="ROUTE" value="LINKED" />
+      <PresenceState className="presence-state--sentry" label="SENTRY" value="PASSIVE" />
+
       <div className="mira-presence__content">
         <strong>MIRA</strong>
         <span>ONLINE</span>
@@ -79,35 +85,73 @@ export function MiraPresence() {
   )
 }
 
+function PresenceState({ className, label, value }: { className: string; label: string; value: string }) {
+  return <div className={`presence-state ${className}`}><span>{label}</span><strong>{value}</strong></div>
+}
+
 export function QuickJump({ label, value, meta, onClick, tone = 'cyan' }: { label: string; value: string; meta: string; onClick: () => void; tone?: 'cyan' | 'violet' | 'green' | 'amber' }) {
   return (
     <button className={`quick-jump quick-jump--${tone}`} onClick={onClick}>
       <span>{label}</span>
       <strong>{value}</strong>
       <small>{meta}</small>
-      <b>OPEN →</b>
+      <b>OPEN</b>
     </button>
   )
 }
 
 export function BottomDock({ onOpenPhase }: { onOpenPhase: () => void }) {
+  const [listening, setListening] = useState(false)
+  const [modeOpen, setModeOpen] = useState(false)
+  const [mode, setMode] = useState('NORMAL')
+  const modes = ['NORMAL', 'QUIET / VOICE', 'QUIET / TEXT', 'DND']
+
+  const stopListening = () => setListening(false)
+
   return (
-    <footer className="bottom-dock">
-      <button className="ptt-button" aria-label="Push to talk">PTT</button>
+    <footer className={`bottom-dock${listening ? ' is-listening' : ''}`}>
+      <button
+        className={`ptt-button${listening ? ' is-listening' : ''}`}
+        aria-label="Push to talk"
+        onPointerDown={() => setListening(true)}
+        onPointerUp={stopListening}
+        onPointerCancel={stopListening}
+        onPointerLeave={stopListening}
+      >PTT</button>
+
       <div className="voice-state">
         <span>MIRA</span>
-        <strong>READY</strong>
+        <strong>{listening ? 'LISTENING' : 'READY'}</strong>
       </div>
+
       <label className="text-entry">
         <span>MAIN THREAD / TEXT INPUT</span>
         <input placeholder="MIRAに話す、またはメッセージを入力…" />
       </label>
-      <div className="speech-controls">
-        <button className="mode-button is-selected">NORMAL</button>
-        <button className="mode-button">QUIET / VOICE</button>
-        <button className="mode-button">QUIET / TEXT</button>
-        <button className="mode-button">DND</button>
-        <button className="mode-button mode-button--accent" onClick={onOpenPhase}>OPEN PHASE</button>
+
+      <div className="dock-actions">
+        <div className="mode-selector-wrap">
+          <button className="mode-selector" aria-expanded={modeOpen} onClick={() => setModeOpen((value) => !value)}>
+            <span>MODE</span>
+            <strong>{mode}</strong>
+            <b>CHANGE</b>
+          </button>
+          {modeOpen && (
+            <div className="mode-menu" role="menu" aria-label="Speech mode">
+              {modes.map((item) => (
+                <button
+                  key={item}
+                  className={`mode-menu__item${item === mode ? ' is-selected' : ''}`}
+                  onClick={() => { setMode(item); setModeOpen(false) }}
+                >
+                  <span>{item}</span>
+                  <small>{item === mode ? 'CURRENT' : 'SELECT'}</small>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <button className="open-phase-button" onClick={onOpenPhase}>OPEN PHASE</button>
       </div>
     </footer>
   )
