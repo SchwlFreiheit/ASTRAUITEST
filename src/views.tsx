@@ -24,18 +24,18 @@ export function MainView({ onView }: { onView: (view: ViewId) => void }) {
             <Metric label="STATUS" value={mock.directive.status} accent />
           </div>
 
-          <div className="plane plane--far plane--visual-grid">
-            <div className="visual-card visual-card--wide">
+          <div className="plane plane--far telemetry-strip directive-telemetry">
+            <div className="telemetry-unit telemetry-unit--wide">
               <SectionLabel>MISSION STAGES</SectionLabel>
               <PhaseTrack />
             </div>
-            <div className="visual-card">
+            <div className="telemetry-unit telemetry-unit--meter">
               <SectionLabel>SESSION LOAD</SectionLabel>
-              <RingMeter value={64} label="64%" sub="57 / 90 MIN" tone="cyan" />
+              <RingMeter value={64} label="64%" sub="57 / 90" tone="cyan" compact />
             </div>
-            <div className="visual-card">
-              <SectionLabel>READINESS MAP</SectionLabel>
-              <NodeMatrix active={7} total={9} tone="green" />
+            <div className="telemetry-unit telemetry-unit--nodes">
+              <SectionLabel>READINESS</SectionLabel>
+              <NodeMatrix active={7} total={9} tone="green" compact />
             </div>
           </div>
 
@@ -62,18 +62,18 @@ export function MainView({ onView }: { onView: (view: ViewId) => void }) {
             <Metric label="FOCUS" value={mock.frame.focus} accent />
           </div>
 
-          <div className="plane plane--far plane--visual-grid frame-visual-grid">
-            <div className="visual-card visual-card--wide">
+          <div className="plane plane--far telemetry-strip frame-telemetry">
+            <div className="telemetry-unit telemetry-unit--wide">
               <SectionLabel>FOCUS PROFILE</SectionLabel>
               <FocusBars values={[28, 56, 92, 72, 44, 65, 86, 53]} />
             </div>
-            <div className="visual-card">
+            <div className="telemetry-unit">
               <SectionLabel>INPUT FLOW</SectionLabel>
-              <TinyWave values={[22, 45, 78, 54, 33, 62, 90, 61, 46, 72]} tone="violet" />
+              <TinyWave values={[22, 45, 78, 54, 33, 62, 90, 61, 46, 72]} tone="violet" compact />
             </div>
-            <div className="visual-card">
+            <div className="telemetry-unit telemetry-unit--nodes">
               <SectionLabel>SOURCE LOCK</SectionLabel>
-              <NodeMatrix active={5} total={6} tone="cyan" />
+              <NodeMatrix active={5} total={6} tone="cyan" compact />
             </div>
           </div>
 
@@ -94,6 +94,7 @@ export function MainView({ onView }: { onView: (view: ViewId) => void }) {
           <span>Route continuity remains flexible</span>
           <ActionButton tone="warning" onClick={() => onView('route')}>OPEN ROUTE</ActionButton>
         </Surface>
+        <AutoInfoStrip />
       </div>
 
       <aside className="quick-jump-stack" aria-label="Context shortcuts">
@@ -189,7 +190,7 @@ export function RouteView() {
 export function ObserveView() {
   return (
     <div className="view view--observe">
-      <ViewIntro eyebrow="REALITY / OBSERVATION" title="Observe" copy="現在の覆測と、その根揮だけをここに集約する。" />
+      <ViewIntro eyebrow="REALITY / OBSERVATION" title="Observe" copy="現在の覂測と、その栺捯だけをここほ険約する。" />
       <div className="observe-grid">
         <Surface className="observe-primary">
           <SectionLabel>CURRENT FRAME</SectionLabel>
@@ -277,6 +278,17 @@ export function SystemView() {
         </Surface>
       </div>
     </div>
+  )
+}
+
+function AutoInfoStrip() {
+  return (
+    <section className="auto-info" aria-label="Ambient information">
+      <div><span>WEATHER</span><strong>26°</strong><small>CLEAR</small></div>
+      <div><span>GPU</span><strong>32%</strong><i style={{ ['--fill' as string]: '32%' }} /></div>
+      <div><span>AFS</span><strong>STANDBY</strong><small>BACKGROUND</small></div>
+      <div><span>UPTIME</span><strong>02:14</strong><small>08</small></div>
+    </section>
   )
 }
 
