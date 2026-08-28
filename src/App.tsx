@@ -1,9 +1,15 @@
 import { useEffect, useMemo, useState } from 'react'
 import { BottomDock, NavRail, TopBar, type ViewId } from './components'
-import { MainView, ObserveView, RouteView, SystemView } from './views'
+import { MainView } from './views'
+import { ObserveSpatialView, RouteSpatialView, SystemSpatialView } from './secondaryViews'
+
+function initialView(): ViewId {
+  const value = new URLSearchParams(window.location.search).get('view')
+  return value === 'route' || value === 'observe' || value === 'system' || value === 'main' ? value : 'main'
+}
 
 export default function App() {
-  const [view, setView] = useState<ViewId>('main')
+  const [view, setView] = useState<ViewId>(initialView)
   const [now, setNow] = useState(() => new Date())
   const [notice, setNotice] = useState<string | null>(null)
 
@@ -21,16 +27,24 @@ export default function App() {
     [now],
   )
 
+  const selectView = (next: ViewId) => {
+    setView(next)
+    const url = new URL(window.location.href)
+    if (next === 'main') url.searchParams.delete('view')
+    else url.searchParams.set('view', next)
+    window.history.replaceState(null, '', url)
+  }
+
   return (
     <div className="app-shell">
       <TopBar time={time} />
       <div className="app-body">
-        <NavRail view={view} onView={setView} />
+        <NavRail view={view} onView={selectView} />
         <main className="view-host" key={view}>
-          {view === 'main' && <MainView onView={setView} />}
-          {view === 'route' && <RouteView />}
-          {view === 'observe' && <ObserveView />}
-          {view === 'system' && <SystemView />}
+          {view === 'main' && <MainView onView={selectView} />}
+          {view === 'route' && <RouteSpatialView />}
+          {view === 'observe' && <ObserveSpatialView />}
+          {view === 'system' && <SystemSpatialView />}
         </main>
       </div>
       <BottomDock onOpenPhase={() => setNotice('OPEN PHASE controls will open here.')} />
