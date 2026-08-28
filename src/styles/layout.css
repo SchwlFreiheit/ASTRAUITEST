@@ -10,15 +10,15 @@
   grid-template-columns: minmax(220px, 1.15fr) minmax(120px, .52fr) minmax(120px, .52fr) minmax(240px, 1.65fr) minmax(130px, .58fr) minmax(120px, .52fr);
   align-items: stretch;
   border-bottom: 1px solid var(--line);
-  background: rgba(2, 8, 12, .92);
-  box-shadow: 0 12px 34px rgba(0,0,0,.2);
+  background: rgba(2, 8, 12, .9);
+  box-shadow: 0 12px 30px rgba(0,0,0,.18);
   z-index: 20;
 }
 
 .brand-block, .top-datum {
   min-width: 0;
   padding: 14px 18px;
-  border-right: 1px solid rgba(112,225,244,.09);
+  border-right: 1px solid rgba(112,225,244,.1);
 }
 
 .brand-block { display: grid; align-content: center; gap: 4px; }
@@ -44,14 +44,14 @@
   align-content: start;
   gap: 10px;
   border-right: 1px solid var(--line);
-  background: rgba(2,8,12,.78);
+  background: rgba(2,8,12,.74);
 }
 
 .view-host {
   min-width: 0;
   min-height: 0;
   overflow: auto;
-  padding: 20px 22px 22px;
+  padding: 18px 22px 24px;
 }
 
 .view {
@@ -60,13 +60,10 @@
 }
 
 .view--main {
-  position: relative;
   display: grid;
-  grid-template-columns: minmax(410px, 1.14fr) minmax(320px, .82fr) minmax(286px, .66fr);
-  gap: 14px;
-  align-items: stretch;
-  perspective: 1500px;
-  transform-style: preserve-3d;
+  grid-template-columns: minmax(500px, 1.28fr) minmax(300px, .78fr) minmax(260px, .64fr);
+  gap: 20px;
+  align-items: start;
 }
 
 .main-primary-stack,
@@ -74,69 +71,12 @@
 .quick-jump-stack {
   min-width: 0;
   display: grid;
-  gap: 16px;
-  transform-style: preserve-3d;
-  transition: transform 260ms cubic-bezier(.2,.8,.2,1), opacity 220ms ease;
+  gap: 18px;
+  align-content: start;
 }
-
-.main-primary-stack {
-  grid-template-rows: auto auto;
-  align-content: space-between;
-  z-index: 4;
-  margin-right: -10px;
-  padding: 18px 0 10px;
-}
-
-.main-presence-stack {
-  grid-template-rows: minmax(400px, 1fr) auto;
-  z-index: 3;
-  margin-left: -16px;
-  padding-left: 22px;
-}
-
-.quick-jump-stack {
-  align-content: center;
-  grid-auto-rows: minmax(118px, auto);
-  z-index: 2;
-  padding-left: 6px;
-  perspective: 900px;
-}
-
-.view--main.is-focus-directive .directive-surface {
-  transform: translateZ(110px) scale(1.018);
-  z-index: 12;
-}
-.view--main.is-focus-directive .frame-surface {
-  transform: translateZ(-90px) scale(.96);
-  opacity: .34;
-  pointer-events: none;
-}
-.view--main.is-focus-directive .main-presence-stack {
-  transform: translateZ(-70px) translateX(18px) scale(.98);
-  opacity: .48;
-}
-.view--main.is-focus-directive .quick-jump-stack {
-  transform: translateZ(-110px) translateX(18px) scale(.96);
-  opacity: .24;
-}
-
-.view--main.is-focus-frame .frame-surface {
-  transform: translateZ(110px) scale(1.018);
-  z-index: 12;
-}
-.view--main.is-focus-frame .directive-surface {
-  transform: translateZ(-90px) scale(.96);
-  opacity: .34;
-  pointer-events: none;
-}
-.view--main.is-focus-frame .main-presence-stack {
-  transform: translateZ(-70px) translateX(18px) scale(.98);
-  opacity: .48;
-}
-.view--main.is-focus-frame .quick-jump-stack {
-  transform: translateZ(-110px) translateX(18px) scale(.96);
-  opacity: .24;
-}
+.main-primary-stack { grid-auto-rows: auto; }
+.main-presence-stack { grid-template-rows: minmax(390px, auto) auto; }
+.quick-jump-stack { grid-auto-rows: minmax(118px, auto); }
 
 .view-intro {
   display: grid;
@@ -166,34 +106,27 @@
 }
 
 .bottom-dock {
-  position: relative;
   display: grid;
   grid-template-columns: 72px 110px minmax(280px, 1fr) auto;
   gap: 14px;
   align-items: center;
   padding: 12px 18px;
   border-top: 1px solid var(--line);
-  background: rgba(2, 8, 12, .97);
-  box-shadow: 0 -18px 38px rgba(0,0,0,.2);
+  background: rgba(2, 8, 12, .96);
+  box-shadow: 0 -18px 38px rgba(0,0,0,.18);
   z-index: 25;
-  overflow: visible;
 }
 
-.dock-actions {
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  gap: 10px;
+@media (max-width: 1280px) {
+  .view--main { grid-template-columns: minmax(440px, 1.12fr) minmax(290px, .82fr); }
+  .quick-jump-stack { grid-column: 1 / -1; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
 @media (max-width: 1180px) {
   .topbar { grid-template-columns: 1.15fr .6fr .6fr 1.35fr .65fr; }
   .top-datum:last-child { display: none; }
-  .view--main { grid-template-columns: minmax(360px, 1.08fr) minmax(300px, .92fr); }
-  .quick-jump-stack { grid-column: 1 / -1; grid-template-columns: repeat(4, 1fr); padding-left: 0; }
-  .main-primary-stack { margin-right: 0; }
-  .main-presence-stack { margin-left: 0; padding-left: 0; }
   .observe-grid { grid-template-columns: 1fr; }
+  .quick-jump-stack { grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
 
 @media (max-width: 900px) {
@@ -203,23 +136,11 @@
   .top-datum--wide { grid-column: span 2; }
   .app-body { grid-template-columns: 1fr; }
   .nav-rail { grid-template-columns: repeat(4, 1fr); border-right: 0; border-bottom: 1px solid var(--line); }
-  .view-host { overflow: visible; }
-  .view--main, .system-grid, .route-grid { grid-template-columns: 1fr; perspective: none; }
+  .view-host { overflow: visible; padding: 16px; }
+  .view--main, .system-grid, .route-grid { grid-template-columns: 1fr; }
   .quick-jump-stack { grid-template-columns: 1fr 1fr; }
   .bottom-dock { grid-template-columns: 72px 1fr; }
-  .text-entry, .dock-actions { grid-column: 1 / -1; }
-  .dock-actions { justify-content: start; }
-  .view--main.is-focus-directive .directive-surface,
-  .view--main.is-focus-frame .frame-surface,
-  .view--main.is-focus-directive .frame-surface,
-  .view--main.is-focus-frame .directive-surface,
-  .view--main.is-focus-directive .main-presence-stack,
-  .view--main.is-focus-frame .main-presence-stack,
-  .view--main.is-focus-directive .quick-jump-stack,
-  .view--main.is-focus-frame .quick-jump-stack {
-    transform: none;
-    opacity: 1;
-  }
+  .text-entry, .speech-controls { grid-column: 1 / -1; }
 }
 
 @media (max-width: 620px) {
@@ -228,5 +149,4 @@
   .quick-jump-stack { grid-template-columns: 1fr; }
   .topbar { grid-template-columns: 1fr 1fr; }
   .top-datum--wide { grid-column: 1 / -1; }
-  .dock-actions { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
 }

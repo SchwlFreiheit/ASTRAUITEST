@@ -2,6 +2,8 @@ import { useState, type ReactNode } from 'react'
 
 export type ViewId = 'main' | 'route' | 'observe' | 'system'
 
+type ModeId = 'NORMAL' | 'QUIET / VOICE' | 'QUIET / TEXT' | 'DND'
+
 export function TopBar({ time }: { time: string }) {
   return (
     <header className="topbar">
@@ -47,8 +49,8 @@ export function NavRail({ view, onView }: { view: ViewId; onView: (view: ViewId)
   )
 }
 
-export function ActionButton({ children, tone = 'default', onClick, pressed }: { children: ReactNode; tone?: 'default' | 'primary' | 'success' | 'warning'; onClick?: () => void; pressed?: boolean }) {
-  return <button className={`action-button action-button--${tone}${pressed ? ' is-pressed' : ''}`} aria-pressed={pressed} onClick={onClick}>{children}</button>
+export function ActionButton({ children, tone = 'default', onClick }: { children: ReactNode; tone?: 'default' | 'primary' | 'success' | 'warning'; onClick?: () => void }) {
+  return <button className={`action-button action-button--${tone}`} onClick={onClick}>{children}</button>
 }
 
 export function Surface({ children, className = '', interactive = false, onClick }: { children: ReactNode; className?: string; interactive?: boolean; onClick?: () => void }) {
@@ -71,87 +73,103 @@ export function MiraPresence() {
       <span className="corner corner--bl" />
       <span className="corner corner--br" />
 
-      <PresenceState className="presence-state--voice" label="VOICE" value="READY" />
-      <PresenceState className="presence-state--context" label="CONTEXT" value="SYNCED" />
-      <PresenceState className="presence-state--route" label="ROUTE" value="LINKED" />
-      <PresenceState className="presence-state--sentry" label="SENTRY" value="PASSIVE" />
+      <div className="mira-band mira-band--top">
+        <StatusPill label="VOICE" value="READY" />
+        <StatusPill label="CONTEXT" value="SYNCED" align="end" />
+      </div>
 
       <div className="mira-presence__content">
+        <div className="presence-lattice" aria-hidden="true">
+          {Array.from({ length: 30 }).map((_, index) => <span key={index} />)}
+        </div>
         <strong>MIRA</strong>
         <span>ONLINE</span>
         <small>LIVE2D PRESENCE SLOT // RESERVED</small>
+      </div>
+
+      <div className="mira-band mira-band--bottom">
+        <StatusPill label="ROUTE" value="LINKED" />
+        <StatusPill label="SENTRY" value="PASSIVE" align="end" />
       </div>
     </section>
   )
 }
 
-function PresenceState({ className, label, value }: { className: string; label: string; value: string }) {
-  return <div className={`presence-state ${className}`}><span>{label}</span><strong>{value}</strong></div>
-}
-
-export function QuickJump({ label, value, meta, onClick, tone = 'cyan' }: { label: string; value: string; meta: string; onClick: () => void; tone?: 'cyan' | 'violet' | 'green' | 'amber' }) {
+function StatusPill({ label, value, align }: { label: string; value: string; align?: 'start' | 'end' }) {
   return (
-    <button className={`quick-jump quick-jump--${tone}`} onClick={onClick}>
+    <div className={`status-pill${align === 'end' ? ' status-pill--end' : ''}`}>
       <span>{label}</span>
       <strong>{value}</strong>
-      <small>{meta}</small>
+    </div>
+  )
+}
+
+export function QuickJump({ label, value, meta, onClick, tone = 'cyan', visual }: { label: string; value: string; meta: string; onClick: () => void; tone?: 'cyan' | 'violet' | 'green' | 'amber'; visual?: ReactNode }) {
+  return (
+    <button className={`quick-jump quick-jump--${tone}`} onClick={onClick}>
+      <div className="quick-jump__copy">
+        <span>{label}</span>
+        <strong>{value}</strong>
+        <small>{meta}</small>
+      </div>
+      {visual && <div className="quick-jump__visual">{visual}</div>}
       <b>OPEN</b>
     </button>
   )
 }
 
 export function BottomDock({ onOpenPhase }: { onOpenPhase: () => void }) {
+  const [mode, setMode] = useState<ModeId>('NORMAL')
+  const [modeMenuOpen, setModeMenuOpen] = useState(false)
   const [listening, setListening] = useState(false)
-  const [modeOpen, setModeOpen] = useState(false)
-  const [mode, setMode] = useState('NORMAL')
-  const modes = ['NORMAL', 'QUIET / VOICE', 'QUIET / TEXT', 'DND']
-
-  const stopListening = () => setListening(false)
+  const modes: ModeId[] = ['NORMAL', 'QUIET / VOICE', 'QUIET / TEXT', 'DND']
 
   return (
-    <footer className={`bottom-dock${listening ? ' is-listening' : ''}`}>
+    <footer className="bottom-dock">
       <button
         className={`ptt-button${listening ? ' is-listening' : ''}`}
         aria-label="Push to talk"
-        onPointerDown={() => setListening(true)}
-        onPointerUp={stopListening}
-        onPointerCancel={stopListening}
-        onPointerLeave={stopListening}
-      >PTT</button>
-
+        onMouseDown={() => setListening(true)}
+        onMouseUp={() => setListening(false)}
+        onMouseLeave={() => setListening(false)}
+        onTouchStart={() => setListening(true)}
+        onTouchEnd={() => setListening(false)}
+      >
+        {listening ? 'LIVE' : 'PTT'}
+      </button>
       <div className="voice-state">
         <span>MIRA</span>
         <strong>{listening ? 'LISTENING' : 'READY'}</strong>
       </div>
-
       <label className="text-entry">
         <span>MAIN THREAD / TEXT INPUT</span>
         <input placeholder="MIRAに話す、またはメッセージを入力…" />
       </label>
-
-      <div className="dock-actions">
-        <div className="mode-selector-wrap">
-          <button className="mode-selector" aria-expanded={modeOpen} onClick={() => setModeOpen((value) => !value)}>
+      <div className="speech-controls">
+        <div className="mode-stack">
+          <button className="mode-summary" onClick={() => setModeMenuOpen((open) => !open)}>
             <span>MODE</span>
             <strong>{mode}</strong>
             <b>CHANGE</b>
           </button>
-          {modeOpen && (
+          {modeMenuOpen && (
             <div className="mode-menu" role="menu" aria-label="Speech mode">
               {modes.map((item) => (
                 <button
                   key={item}
-                  className={`mode-menu__item${item === mode ? ' is-selected' : ''}`}
-                  onClick={() => { setMode(item); setModeOpen(false) }}
+                  className={`mode-menu__item${mode === item ? ' is-selected' : ''}`}
+                  onClick={() => {
+                    setMode(item)
+                    setModeMenuOpen(false)
+                  }}
                 >
-                  <span>{item}</span>
-                  <small>{item === mode ? 'CURRENT' : 'SELECT'}</small>
+                  {item}
                 </button>
               ))}
             </div>
           )}
         </div>
-        <button className="open-phase-button" onClick={onOpenPhase}>OPEN PHASE</button>
+        <button className="mode-button mode-button--accent" onClick={onOpenPhase}>OPEN PHASE</button>
       </div>
     </footer>
   )
