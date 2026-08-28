@@ -1,8 +1,22 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { mock } from './mock'
 import type { ViewId } from './components'
 
 type FocusId = 'directive' | 'frame' | 'route' | 'sentry' | 'laplace' | null
+
+type AmbientItem = {
+  label: string
+  value: string
+  meta: string
+  visual: 'weather' | 'gpu' | 'afs' | 'uptime'
+}
+
+const ambientItems: AmbientItem[] = [
+  { label: 'WEATHER', value: '26°', meta: 'CLEAR', visual: 'weather' },
+  { label: 'GPU LOAD', value: '32%', meta: 'NORMAL', visual: 'gpu' },
+  { label: 'AFS', value: 'STANDBY', meta: 'BACKGROUND', visual: 'afs' },
+  { label: 'UPTIME', value: '02:14', meta: '08', visual: 'uptime' },
+]
 
 function initialFocus(): FocusId {
   const value = new URLSearchParams(window.location.search).get('focus')
@@ -14,6 +28,12 @@ export function MainSpatialV2({ onView }: { onView: (view: ViewId) => void }) {
   const [focus, setFocus] = useState<FocusId>(initialFocus)
   const [pinned, setPinned] = useState(params.get('pin') === '1')
   const [spread, setSpread] = useState(params.get('spread') === '1')
+  const [ambientIndex, setAmbientIndex] = useState(0)
+
+  useEffect(() => {
+    const id = window.setInterval(() => setAmbientIndex((current) => (current + 1) % ambientItems.length), 4200)
+    return () => window.clearInterval(id)
+  }, [])
 
   const syncUrl = (nextFocus: FocusId, nextPinned = pinned, nextSpread = spread) => {
     const url = new URL(window.location.href)
@@ -112,6 +132,8 @@ export function MainSpatialV2({ onView }: { onView: (view: ViewId) => void }) {
         <div className="holo-mira__status"><span>VOICE <b>READY</b></span><span>CONTEXT <b>SYNCED</b></span></div>
       </section>
 
+      <AmbientTicker item={ambientItems[ambientIndex]} />
+
       <button className="holo-route-portal" onClick={() => toggle('route')} aria-pressed={focus === 'route'}>
         <span>NEXT DIRECTIVE</span><strong>{mock.directive.next}</strong>
         <div className="route-mini">{mock.route.map((item,index)=><i key={item.time} className={index===0?'is-now':index===1?'is-next':''}><b>{item.time}</b><small>{item.title}</small></i>)}</div>
@@ -137,5 +159,23 @@ export function MainSpatialV2({ onView }: { onView: (view: ViewId) => void }) {
 
       <div className="holo-instruction" aria-live="polite">{focus === null ? 'SELECT INFORMATION // ELEMENT MOVES TO FOREGROUND' : pinned ? 'FOCUS PINNED // SPREAD RELATED INFORMATION OR COLLAPSE' : spread ? 'RELATED INFORMATION SPREAD ACROSS DEPTH' : 'FOCUS DEPLOYED // PIN, SPREAD, OR COLLAPSE'}</div>
     </div>
+  )
+}
+
+function AmbientTicker({ item }: { item: AmbientItem }) {
+  return (
+    <section className={`ambient-ticker ambient-ticker--${item.visual}`} aria-label="Auto information panel">
+      <div key={`${item.label}-${item.value}`} className="ambient-ticker__content">
+        <span>{item.label}</span>
+        <strong>{item.value}</strong>
+        <small>{item.meta}</small>
+      </div>
+      <div key={`${item.visual}-${item.value}`} className="ambient-ticker__visual" aria-hidden="true">
+        {item.visual === 'weather' && <><i className="weather-core"/><i className="weather-ray weather-ray--a"/><i className="weather-ray weather-ray--b"/><i className="weather-ray weather-ray--c"/></>}
+        {item.visual === 'gpu' && <><i style={{height:'24%'}}/><i style={{height:'42%'}}/><i style={{height:'68%'}}/><i style={{height:'32%'}}/><i style={{height:'56%'}}/></>}
+        {item.visual === 'afs' && <><i className="afs-node is-ready"/><i className="afs-node"/><i className="afs-node"/><i className="afs-node"/></>}
+        {item.visual === 'uptime' && <><i style={{height:'18%'}}/><i style={{height:'38%'}}/><i style={{height:'62%'}}/><i style={{height:'82%'}}/><i style={{height:'100%'}}/></>}
+      </div>
+    </section>
   )
 }
