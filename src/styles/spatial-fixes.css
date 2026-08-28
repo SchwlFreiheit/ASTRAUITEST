@@ -1,0 +1,14 @@
+.holo-layer__depth{display:none}
+.holo-main:not([data-focus='none']) .holo-instruction{bottom:14%;opacity:.58}
+.holo-main[data-spread='true'] .holo-edge-deck{right:-6.5%;width:18%;opacity:.32!important}
+.holo-main[data-focus='directive'][data-spread='true'] .holo-mira{left:73%;top:8%;width:15%;height:34%;transform:translateZ(-90px) scale(.72);opacity:.32!important}
+.holo-main[data-focus='frame'][data-spread='true'] .holo-mira{left:74%;top:8%;width:14%;height:32%;transform:translateZ(-92px) scale(.7);opacity:.3!important}
+.holo-main[data-focus='route'][data-spread='true'] .holo-mira{left:72%;top:4%;width:15%;height:31%;transform:translateZ(-86px) scale(.7);opacity:.3!important}
+.holo-main[data-spread='true'] .holo-mira__status{display:none}
+.holo-main[data-spread='true'] .holo-mira>strong{font-size:30px}
+.holo-main[data-spread='true'] .holo-mira small,.holo-main[data-spread='true'] .holo-mira__label{font-size:7px}
+.holo-main[data-focus='directive'][data-spread='true'] .holo-route-portal{left:69%;bottom:15%;width:27%}
+.holo-main[data-focus='frame'][data-spread='true'] .holo-route-portal{left:2%;bottom:8%;width:29%}
+.holo-main[data-focus='route'][data-spread='true'] .holo-directive{left:2%;top:7%;width:29%}
+.spatial-toolbar{bottom:5.5%}
+@media(max-width:1050px){.holo-main[data-spread='true'] .holo-mira__status{display:flex}.holo-main[data-spread='true'] .holo-mira>strong{font-size:38px}}
