@@ -8,6 +8,7 @@ import './styles/components.css'
 import './styles/motion.css'
 import './styles/spatial.css'
 import './styles/spatial-tune.css'
+import './styles/spatial-polish.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
