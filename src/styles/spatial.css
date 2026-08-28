@@ -1,0 +1,490 @@
+:root {
+  --font-ui: "Bahnschrift", "Segoe UI Variable Text", "Yu Gothic UI", "Meiryo", sans-serif;
+  --font-display: "Bahnschrift SemiCondensed", "Bahnschrift", "Segoe UI Variable Display", "Yu Gothic UI", sans-serif;
+}
+
+/* MAIN is a fixed viewport into the larger system. Information moves; the camera does not. */
+.view--main {
+  position: relative;
+  display: block;
+  height: calc(100vh - 210px);
+  min-height: 700px;
+  max-height: 790px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.view--main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -4;
+  pointer-events: none;
+  opacity: .2;
+  background-image:
+    linear-gradient(rgba(114,225,244,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(114,225,244,.045) 1px, transparent 1px);
+  background-size: 58px 58px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 16%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 16%, #000 82%, transparent 100%);
+}
+
+.view--main::after {
+  content: "";
+  position: absolute;
+  left: 6%;
+  right: 7%;
+  top: 48.5%;
+  height: 1px;
+  z-index: -2;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(105,230,173,.35) 18%, rgba(114,225,244,.55) 48%, rgba(196,140,255,.45) 72%, transparent);
+  box-shadow: 0 0 18px rgba(114,225,244,.08);
+}
+
+.view--main .main-primary-stack,
+.view--main .main-presence-stack,
+.view--main .quick-jump-stack {
+  min-width: 0;
+}
+
+.view--main .main-primary-stack {
+  position: absolute;
+  inset: 0;
+  display: block;
+  z-index: 5;
+}
+
+.view--main .directive-cluster {
+  position: absolute;
+  left: 1.2%;
+  top: 2.5%;
+  width: 49%;
+  z-index: 6;
+  filter: drop-shadow(0 24px 38px rgba(0,0,0,.26));
+}
+
+.view--main .frame-cluster {
+  position: absolute;
+  left: 6.2%;
+  top: 53.2%;
+  width: 45.5%;
+  z-index: 8;
+  filter: drop-shadow(0 24px 42px rgba(0,0,0,.3));
+}
+
+.view--main .main-presence-stack {
+  position: absolute;
+  left: 44.5%;
+  top: 1.5%;
+  width: 34.5%;
+  height: 96%;
+  display: block;
+  z-index: 4;
+}
+
+.view--main .quick-jump-stack {
+  position: absolute;
+  right: -5.2%;
+  top: 2.5%;
+  width: 29%;
+  display: grid;
+  gap: 14px;
+  z-index: 7;
+}
+
+/* Intent and Reality are translucent information planes, not physical cards. */
+.view--main .directive-cluster .surface,
+.view--main .frame-cluster .surface {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.view--main .plane {
+  border-radius: 0;
+}
+
+.view--main .plane--near {
+  min-height: 122px;
+  padding: 16px 21px 17px;
+  border: 0;
+  border-left: 1px solid rgba(114,225,244,.46);
+  border-top: 1px solid rgba(114,225,244,.13);
+  background:
+    linear-gradient(96deg, rgba(8,27,34,.94), rgba(5,17,23,.7) 70%, rgba(5,15,20,.22)),
+    linear-gradient(180deg, rgba(114,225,244,.055), transparent 55%);
+  clip-path: polygon(0 0, 96% 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+  box-shadow:
+    -10px 14px 32px rgba(0,0,0,.3),
+    inset 20px 0 34px rgba(114,225,244,.025);
+}
+
+.view--main .directive-cluster .plane--near::after,
+.view--main .frame-cluster .plane--near::after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  right: 10%;
+  bottom: -9px;
+  height: 18px;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(114,225,244,.12), rgba(114,225,244,.02), transparent);
+  filter: blur(9px);
+  pointer-events: none;
+}
+
+.view--main .plane--headline h1 {
+  margin-top: 5px;
+  font-size: clamp(38px, 3vw, 54px);
+  font-weight: 430;
+  line-height: .98;
+  letter-spacing: -.035em;
+  text-shadow: 0 10px 28px rgba(0,0,0,.42);
+}
+
+.view--main .plane--frame-head h2 {
+  margin-top: 5px;
+  font-size: clamp(31px, 2.35vw, 43px);
+  font-weight: 430;
+}
+
+.view--main .lead-copy {
+  margin-top: 8px;
+  max-width: 640px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #c8d5d9;
+}
+
+.view--main .section-label {
+  font-size: 10.5px;
+  letter-spacing: .105em;
+  color: #86a1aa;
+}
+
+.view--main .priority-tag {
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+
+.view--main .plane--metric-grid {
+  margin-left: 10px;
+  margin-right: 2%;
+  padding: 10px 18px 11px;
+  border: 0;
+  border-left: 1px solid rgba(114,225,244,.15);
+  border-bottom: 1px solid rgba(114,225,244,.15);
+  background: linear-gradient(90deg, rgba(3,12,17,.88), rgba(4,15,20,.58) 76%, transparent);
+  transform: translate3d(10px,-4px,0);
+}
+
+.view--main .metric span {
+  font-size: 9.5px;
+}
+.view--main .metric strong {
+  font-size: 16px;
+}
+
+.view--main .telemetry-strip {
+  margin-left: 20px;
+  margin-right: 0;
+  min-height: 92px;
+  padding: 10px 14px 12px 16px;
+  display: grid;
+  grid-template-columns: minmax(0,1.6fr) 96px 112px;
+  gap: 0;
+  border: 0;
+  border-left: 1px solid rgba(114,225,244,.1);
+  border-bottom: 1px solid rgba(114,225,244,.08);
+  background:
+    linear-gradient(90deg, rgba(2,10,14,.68), rgba(7,20,26,.7) 68%, rgba(6,16,21,.3)),
+    linear-gradient(180deg, rgba(114,225,244,.025), transparent);
+  transform: translate3d(18px,-8px,0);
+  box-shadow: 18px 24px 42px rgba(0,0,0,.18);
+}
+
+.view--main .telemetry-unit {
+  min-width: 0;
+  min-height: 66px;
+  padding: 0 12px;
+  display: grid;
+  align-content: center;
+  gap: 6px;
+}
+.view--main .telemetry-unit:first-child { padding-left: 0; }
+.view--main .telemetry-unit + .telemetry-unit { border-left: 1px solid rgba(114,225,244,.1); }
+.view--main .telemetry-strip .ring-meter--compact { width: 66px; }
+.view--main .telemetry-strip .ring-meter__core strong { font-size: 15px; }
+.view--main .telemetry-strip .ring-meter__core span { font-size: 7px; }
+.view--main .telemetry-strip .node-matrix--compact { grid-template-columns: repeat(3,16px); gap: 5px; }
+.view--main .telemetry-strip .node-matrix--compact span { width: 16px; max-width: 16px; }
+.view--main .telemetry-strip .focus-bars { height: 45px; gap: 5px; padding-top: 0; }
+.view--main .telemetry-strip .tiny-wave--compact { height: 44px; }
+
+.view--main .directive-telemetry .phase-track {
+  margin-top: 0;
+  gap: 6px;
+}
+.view--main .directive-telemetry .phase-step { gap: 4px; }
+.view--main .directive-telemetry .phase-step__index { font-size: 8px; }
+.view--main .directive-telemetry .phase-step__dot { height: 8px; }
+.view--main .directive-telemetry .phase-step strong {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 9px;
+  letter-spacing: .01em;
+}
+
+.view--main .plane--actions {
+  margin-left: 10px;
+  width: 88%;
+  padding: 0 12px;
+  gap: 8px;
+  background: linear-gradient(90deg, rgba(2,9,13,.84), rgba(2,9,13,.2));
+}
+.view--main .plane--actions .action-button { min-height: 46px; }
+
+/* Reality plane gets a restrained SENTRY scan because observation is active. */
+.view--main .frame-telemetry {
+  position: relative;
+  overflow: hidden;
+}
+.view--main .frame-telemetry::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  left: -2%;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(114,225,244,.52), transparent);
+  box-shadow: 0 0 14px rgba(114,225,244,.18);
+  animation: sentry-field-scan 5.8s linear infinite;
+  opacity: .55;
+}
+@keyframes sentry-field-scan {
+  0%, 14% { left: -2%; opacity: 0; }
+  20% { opacity: .52; }
+  66% { opacity: .42; }
+  72%,100% { left: 102%; opacity: 0; }
+}
+
+/* MIRA is a presence field reserved for future Live2D, not a fake avatar. */
+.view--main .mira-presence {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 56%;
+  min-height: 0;
+  overflow: visible;
+  background:
+    radial-gradient(ellipse at 50% 52%, rgba(196,140,255,.09), rgba(196,140,255,.025) 42%, transparent 68%),
+    linear-gradient(90deg, transparent 6%, rgba(114,225,244,.016) 50%, transparent 94%);
+  box-shadow:
+    inset 0 -32px 60px rgba(0,0,0,.24),
+    0 28px 52px rgba(0,0,0,.18);
+}
+.view--main .mira-presence::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 9%;
+  bottom: 7%;
+  width: 58%;
+  transform: translateX(-50%);
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(196,140,255,.055) 28%, rgba(196,140,255,.08) 55%, transparent 92%);
+  filter: blur(18px);
+}
+.view--main .presence-lattice { opacity: .42; }
+.view--main .mira-presence__content strong {
+  font-size: 38px;
+  font-weight: 420;
+  letter-spacing: .22em;
+}
+.view--main .mira-band--top { top: 48px; }
+.view--main .mira-band--bottom { bottom: 48px; }
+.view--main .status-pill {
+  min-width: 102px;
+  background: linear-gradient(90deg, rgba(6,16,21,.78), rgba(7,18,24,.4));
+  border-top-color: rgba(196,140,255,.18);
+}
+
+.view--main .main-presence-stack::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 51%;
+  height: 15%;
+  width: 1px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(196,140,255,.4), rgba(114,225,244,.18), transparent);
+  box-shadow: 0 0 14px rgba(196,140,255,.08);
+}
+
+.view--main .next-directive-surface {
+  position: absolute;
+  left: 8%;
+  right: 6%;
+  top: 58%;
+  padding: 12px 12px 0 18px;
+  z-index: 6;
+  border-left: 1px solid rgba(240,191,107,.24);
+  background: linear-gradient(90deg, rgba(3,12,16,.72), rgba(3,12,16,.16));
+  box-shadow: -12px 18px 34px rgba(0,0,0,.16);
+}
+.view--main .next-directive-surface > strong {
+  font-size: 19px;
+}
+.view--main .next-directive-surface .mini-route {
+  margin-top: 2px;
+}
+.view--main .next-directive-surface .action-button { margin-top: 1px; }
+
+.view--main .auto-info {
+  position: absolute;
+  left: 8%;
+  right: 6%;
+  bottom: 2.2%;
+  min-height: 70px;
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  border-top: 1px solid rgba(114,225,244,.1);
+  border-bottom: 1px solid rgba(114,225,244,.05);
+  background: linear-gradient(90deg, rgba(3,10,15,.2), rgba(196,140,255,.022), rgba(3,10,15,.2));
+}
+.view--main .auto-info > div {
+  min-width: 0;
+  padding: 10px 9px;
+  display: grid;
+  align-content: center;
+  gap: 2px;
+}
+.view--main .auto-info > div + div { border-left: 1px solid rgba(114,225,244,.075); }
+.view--main .auto-info span,
+.view--main .auto-info small {
+  font-family: var(--font-data);
+  font-size: 8px;
+  letter-spacing: .07em;
+  color: var(--text-3);
+}
+.view--main .auto-info strong {
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.view--main .auto-info i {
+  height: 3px;
+  margin-top: 2px;
+  background: linear-gradient(90deg, rgba(114,225,244,.68) var(--fill), rgba(255,255,255,.05) 0);
+}
+
+/* Edge subsystems are partially off-view and slide into the operational field. */
+.view--main .quick-jump {
+  min-height: 112px;
+  padding: 14px 18px 14px 20px;
+  grid-template-columns: minmax(0,1fr) 92px;
+  gap: 12px;
+  border: 0;
+  border-left: 2px solid currentColor;
+  color: var(--text-2);
+  background:
+    linear-gradient(92deg, rgba(7,20,27,.95), rgba(5,16,22,.72) 76%, rgba(3,10,14,.3)),
+    linear-gradient(180deg, rgba(255,255,255,.015), transparent);
+  clip-path: polygon(0 0, 100% 0, 94% 100%, 0 100%);
+  box-shadow: -18px 18px 38px rgba(0,0,0,.24);
+  transform: translateX(34px);
+}
+.view--main .quick-jump:nth-child(2) { margin-left: 18px; transform: translateX(42px); }
+.view--main .quick-jump:nth-child(3) { margin-left: 5px; transform: translateX(31px); }
+.view--main .quick-jump:nth-child(4) { margin-left: 25px; transform: translateX(46px); }
+.view--main .quick-jump:hover,
+.view--main .quick-jump:nth-child(n):hover {
+  transform: translateX(0);
+  filter: brightness(1.08);
+}
+.view--main .quick-jump--cyan { color: var(--cyan); }
+.view--main .quick-jump--violet { color: var(--violet); }
+.view--main .quick-jump--green { color: var(--green); }
+.view--main .quick-jump--amber { color: var(--amber); }
+.view--main .quick-jump__copy > span { font-size: 10px; }
+.view--main .quick-jump__copy > strong { color: var(--text); font-size: 18px; line-height: 1.15; }
+.view--main .quick-jump__copy > small { color: #7f99a2; font-size: 11px; line-height: 1.35; }
+.view--main .quick-jump > b { top: 12px; right: 26px; font-size: 10px; }
+
+/* Moving information planes reveals depth without moving the camera. */
+.view--main .directive-cluster:hover .plane--near,
+.view--main .frame-cluster:hover .plane--near {
+  transform: translate3d(-4px,-2px,0);
+  border-left-color: rgba(114,225,244,.72);
+  box-shadow: -14px 22px 42px rgba(0,0,0,.34), inset 22px 0 38px rgba(114,225,244,.04);
+}
+.view--main .directive-cluster:hover .plane--metric-grid,
+.view--main .frame-cluster:hover .plane--metric-grid {
+  transform: translate3d(14px,-5px,0);
+}
+.view--main .directive-cluster:hover .plane--far,
+.view--main .frame-cluster:hover .plane--far {
+  transform: translate3d(26px,-10px,0);
+}
+
+/* The system access rail is an edge subsystem, not a stack of boxed web buttons. */
+.nav-rail {
+  background: linear-gradient(90deg, rgba(2,8,12,.88), rgba(2,8,12,.48));
+}
+.nav-tile {
+  border: 0;
+  border-left: 2px solid rgba(114,225,244,.18);
+  background: linear-gradient(90deg, rgba(7,20,26,.7), rgba(5,14,19,.1));
+  clip-path: polygon(0 0, 94% 0, 100% 12px, 100% 100%, 0 100%);
+}
+.nav-tile.is-active {
+  border-left-color: var(--cyan);
+  background: linear-gradient(90deg, rgba(18,54,65,.7), rgba(7,20,27,.12));
+  box-shadow: 14px 0 34px rgba(114,225,244,.055), inset 12px 0 18px rgba(114,225,244,.055);
+}
+
+.bottom-dock {
+  background:
+    linear-gradient(90deg, rgba(2,8,12,.97), rgba(4,13,18,.94) 55%, rgba(2,8,12,.97)),
+    rgba(2,8,12,.96);
+  box-shadow: 0 -18px 48px rgba(0,0,0,.24), inset 0 1px rgba(114,225,244,.05);
+}
+
+@media (max-width: 1180px) {
+  .view--main { height: auto; max-height: none; overflow: visible; display: grid; grid-template-columns: 1fr; gap: 18px; }
+  .view--main::before, .view--main::after { display: none; }
+  .view--main .main-primary-stack,
+  .view--main .main-presence-stack,
+  .view--main .quick-jump-stack,
+  .view--main .directive-cluster,
+  .view--main .frame-cluster,
+  .view--main .mira-presence,
+  .view--main .next-directive-surface,
+  .view--main .auto-info {
+    position: relative;
+    inset: auto;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    width: auto;
+    height: auto;
+    transform: none;
+  }
+  .view--main .main-primary-stack,
+  .view--main .main-presence-stack,
+  .view--main .quick-jump-stack { display: grid; gap: 16px; }
+  .view--main .mira-presence { min-height: 340px; }
+  .view--main .quick-jump { transform: none !important; margin-left: 0 !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view--main .frame-telemetry::after { animation: none; display: none; }
+}
