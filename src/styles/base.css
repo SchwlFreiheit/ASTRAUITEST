@@ -1,0 +1,19 @@
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; min-width: 320px; min-height: 100%; }
+body {
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(5, 14, 19, 0.96), rgba(1, 5, 8, 1) 66%),
+    var(--bg-0);
+  color: var(--text);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+button, input { font: inherit; }
+button { color: inherit; }
+button, input { outline: none; }
+button:focus-visible, input:focus-visible { box-shadow: 0 0 0 2px rgba(114,225,244,.65); }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.025em; }
+.text-ok { color: var(--green) !important; }
