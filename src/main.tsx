@@ -13,6 +13,7 @@ import './styles/focus.css'
 import './styles/secondary-spatial.css'
 import './styles/main-spatial-v2.css'
 import './styles/scenes.css'
+import './styles/shell-holo.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
