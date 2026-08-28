@@ -1,0 +1,29 @@
+:root {
+  color-scheme: dark;
+  --bg-0: #02070b;
+  --bg-1: #061016;
+  --bg-2: #0a1820;
+  --surface: rgba(8, 22, 29, 0.82);
+  --surface-strong: rgba(10, 28, 37, 0.94);
+  --surface-muted: rgba(8, 18, 24, 0.62);
+  --line: rgba(112, 225, 244, 0.22);
+  --line-strong: rgba(112, 225, 244, 0.5);
+  --cyan: #72e1f4;
+  --cyan-soft: rgba(114, 225, 244, 0.16);
+  --violet: #c48cff;
+  --violet-soft: rgba(196, 140, 255, 0.14);
+  --green: #69e6ad;
+  --green-soft: rgba(105, 230, 173, 0.12);
+  --amber: #f0bf6b;
+  --amber-soft: rgba(240, 191, 107, 0.12);
+  --red: #ff6b76;
+  --text: #e8f1f4;
+  --text-2: #b7c9d0;
+  --text-3: #718b95;
+  --shadow: rgba(0, 0, 0, 0.52);
+  --radius: 3px;
+  --control-h: 48px;
+  --font-ui: "Segoe UI Variable Text", "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
+  --font-display: "Segoe UI Variable Display", "Segoe UI", "Yu Gothic UI", sans-serif;
+  --font-data: "Cascadia Code", "Consolas", monospace;
+}
