@@ -11,6 +11,8 @@ import './styles/spatial-tune.css'
 import './styles/spatial-polish.css'
 import './styles/focus.css'
 import './styles/secondary-spatial.css'
+import './styles/main-spatial-v2.css'
+import './styles/scenes.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
